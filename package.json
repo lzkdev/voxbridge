@@ -1,0 +1,37 @@
+{
+  "name": "voxbridge",
+  "version": "0.1.0",
+  "description": "Real-time bidirectional speech translation and subtitle tool for desktop",
+  "author": "lzkdev",
+  "license": "MIT",
+  "homepage": "https://github.com/lzkdev/voxbridge",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lzkdev/voxbridge.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lzkdev/voxbridge/issues"
+  },
+  "keywords": ["tauri", "speech-translation", "real-time", "subtitle", "desktop-app"],
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "tauri:dev:local": "bash ./scripts/tauri-dev-local.sh",
+    "tauri:build:debug:local": "bash ./scripts/tauri-build-debug-local.sh"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.10.1",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.0"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.10.1",
+    "@tauri-apps/plugin-clipboard-manager": "^2.3.2",
+    "@tauri-apps/plugin-global-shortcut": "^2.3.1",
+    "@tauri-apps/plugin-process": "^2.3.1"
+  }
+}

@@ -1,0 +1,151 @@
+@import "../shared/theme.css";
+
+.settings-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 140px;
+  background: var(--bg-sidebar);
+  padding: var(--space-xl) 0;
+  border-right: 1px solid var(--line);
+  flex-shrink: 0;
+}
+
+.sidebar-item {
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--text-base);
+  color: var(--muted);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: color 0.15s, background 0.15s;
+}
+
+.sidebar-item:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.sidebar-item.active {
+  color: var(--green);
+  background: var(--green-dim);
+  border-left: 2px solid var(--green);
+  font-weight: 500;
+}
+
+.content {
+  flex: 1;
+  padding: var(--space-2xl);
+  overflow-y: auto;
+}
+
+.content h2 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-xl);
+}
+
+.form-group {
+  margin-bottom: var(--space-xl);
+}
+
+.form-group label {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  margin-bottom: var(--space-sm);
+}
+
+.form-row {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.api-key-display {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.api-key-display input {
+  flex: 1;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: var(--space-xl) 0;
+}
+
+.about-section {
+  color: var(--muted);
+  font-size: var(--text-base);
+  line-height: 1.8;
+}
+
+.about-section a {
+  color: var(--brand);
+}
+
+.range-value {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  min-width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+input[type="range"] {
+  height: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  accent-color: var(--green);
+  flex: 1;
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+
+.tab-section {
+  display: none;
+}
+
+.tab-section.active {
+  display: block;
+}
+
+/* ── Utility classes used by JS ──────────────────────────────────────────── */
+
+.toggle-row-label {
+  font-size: var(--text-base);
+}
+
+.about-app-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--space-lg);
+}
+
+.about-key {
+  color: var(--muted);
+}
+
+.mode-desc {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  min-width: 40px;
+  margin-right: var(--space-md);
+  text-align: right;
+  flex-shrink: 0;
+}

@@ -1,0 +1,114 @@
+html, body {
+  background: transparent;
+  margin: 0;
+  overflow: hidden;
+  font-family: -apple-system, "PingFang SC", sans-serif;
+}
+#app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.control-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--overlay, rgba(30, 30, 50, 0.95));
+  padding: 5px 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+  cursor: grab;
+}
+.control-bar.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.ctrl-btn {
+  font-size: 11px;
+  color: var(--muted, #aaa);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+.ctrl-btn:hover { color: white; background: rgba(255,255,255,0.1); }
+.ctrl-btn.active { color: var(--green, #4ade80); }
+.ctrl-divider {
+  width: 1px;
+  height: 14px;
+  background: rgba(255,255,255,0.15);
+}
+.ctrl-opacity {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ctrl-opacity label {
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  margin: 0;
+}
+.ctrl-opacity input[type="range"] {
+  -webkit-appearance: none;
+  width: 60px;
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+  outline: none;
+  border: none;
+  padding: 0;
+}
+.ctrl-opacity input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green, #4ade80);
+}
+.subtitle-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 8px 12px;
+  background: rgba(10, 10, 20, var(--bg-opacity, 0.75));
+  border-radius: 8px;
+}
+.subtitle-history {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+.subtitle-history::-webkit-scrollbar { width: 4px; }
+.subtitle-history::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+.subtitle-line {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.25);
+  padding: 2px 0;
+  word-break: break-word;
+}
+.subtitle-line:last-child {
+  color: rgba(255,255,255,0.5);
+}
+.subtitle-live {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.5);
+  padding: 2px 0;
+  min-height: 1.5em;
+  word-break: break-word;
+}
+.subtitle-live.active {
+  color: rgba(255,255,255,0.8);
+}
+.subtitle-placeholder {
+  color: rgba(255,255,255,0.3);
+  font-size: 13px;
+  text-align: center;
+  padding-top: 20px;
+}

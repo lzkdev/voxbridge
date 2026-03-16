@@ -1,0 +1,148 @@
+@import "../shared/theme.css";
+
+.setup-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.step {
+  display: none;
+}
+
+.step.active {
+  display: block;
+}
+
+.step-indicators {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bg-toggle-off);
+}
+
+.step-dot.active {
+  background: var(--brand);
+}
+
+.step-dot.done {
+  background: var(--brand);
+  opacity: 0.5;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.tagline {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.btn-primary {
+  width: 100%;
+  height: 40px;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-xl);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-skip {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  margin-top: 12px;
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
+.btn-skip:hover {
+  color: var(--ink);
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.success-icon {
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.error-msg {
+  color: var(--red);
+  font-size: var(--text-base);
+  margin-top: var(--space-sm);
+}
+
+.success-msg {
+  color: var(--green);
+  font-size: var(--text-base);
+  margin-top: var(--space-sm);
+}
+
+.device-select {
+  margin-bottom: var(--space-lg);
+}
+
+.shortcut-list {
+  list-style: none;
+  padding: 0;
+  font-size: var(--text-base);
+  color: var(--muted);
+  line-height: 2;
+}
+
+/* ── Logo size variants ──────────────────────────────────────────────────── */
+
+.logo--sub {
+  font-size: 18px;
+}
+
+.logo--done {
+  font-size: 20px;
+}
+
+/* ── Tagline variant with tighter bottom margin ──────────────────────────── */
+
+.tagline--hint {
+  margin-bottom: var(--space-xl);
+}
+
+/* ── Button spacing variants ─────────────────────────────────────────────── */
+
+.btn-primary--mt {
+  margin-top: var(--space-lg);
+}
+
+.btn-primary--spaced {
+  margin-top: 24px;
+}
