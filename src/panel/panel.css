@@ -168,6 +168,24 @@
   margin-bottom: 2px;
 }
 
+.device-refresh-btn {
+  display: inline;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  padding: 0 0 0 var(--space-sm);
+  margin: 0;
+  vertical-align: baseline;
+  line-height: 1;
+}
+
+.device-refresh-btn:hover {
+  color: var(--ink);
+  background: none;
+}
+
 .device-select {
   width: 100%;
   height: 26px;
@@ -261,27 +279,6 @@
   flex-shrink: 0;
 }
 
-/* ── Refresh row ───────────────────────────────────────────────────────── */
-
-.refresh-row {
-  text-align: center;
-  margin-top: var(--space-xs);
-}
-
-.refresh-btn {
-  font-size: var(--text-xs);
-  color: var(--muted);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: var(--space-xs) var(--space-md);
-}
-
-.refresh-btn:hover {
-  color: var(--ink);
-  background: none;
-}
-
 /* ── Settings tab ──────────────────────────────────────────────────────── */
 
 .settings-tab {
@@ -342,6 +339,39 @@
   font-size: var(--text-sm);
   color: var(--muted);
   line-height: 1.5;
+}
+
+/* ── Log panel ──────────────────────────────────────────────────────────── */
+
+.log-box {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.6;
+  max-height: 420px;
+  margin-bottom: var(--space-sm);
+}
+
+.log-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+}
+
+.log-tag {
+  color: var(--brand);
+  margin-right: var(--space-sm);
+}
+
+.log-kind {
+  color: var(--green);
+  margin-right: var(--space-sm);
 }
 
 /* ── Footer ─────────────────────────────────────────────────────────────── */

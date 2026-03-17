@@ -23,4 +23,5 @@ export const ipc = {
   readStatus: () => invoke<EngineStatus>("read_status"),
   pollEvents: (afterId: number) => invoke<UiEvent[]>("poll_events", { afterId }),
   getSubtitleEvents: (afterId: number) => invoke<UiEvent[]>("get_subtitle_events", { afterId }),
+  setVolume: (volume: number) => invoke<void>("set_volume", { volume }),
 };

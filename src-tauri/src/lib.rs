@@ -3,6 +3,7 @@ pub mod state;
 pub mod tray;
 
 use base64::Engine;
+use tauri::Manager;
 use config::AppConfig;
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use futures_util::{SinkExt, StreamExt};
@@ -115,7 +116,10 @@ fn select_output_device(selector: &str) -> Result<cpal::Device, String> {
             return Ok(dev.clone());
         }
     }
-    Err(format!("Output device not found: {}", selector))
+    // Fallback to system default output device
+    eprintln!("[audio] Output device '{}' not found, falling back to default", selector);
+    host.default_output_device()
+        .ok_or_else(|| format!("Output device not found: {} (and no default available)", selector))
 }
 
 fn choose_input_config(
@@ -910,7 +914,7 @@ async fn run_qwen_worker(
                         }
                         if let (Some(queue), Some(orate)) = (playback_queue.as_ref(), out_rate) {
                             let out_pcm = resample_i16_linear(&pcm, DEFAULT_OUTPUT_RATE, orate);
-                            let vol = config.volume;
+                            let vol = state.get_volume();
                             if let Ok(mut q) = queue.lock() {
                                 for s in out_pcm {
                                     let scaled = ((s as f32) * vol).clamp(-32768.0, 32767.0) as i16;
@@ -1598,6 +1602,11 @@ fn validate_api_key(api_key: String) -> Result<bool, String> {
     Ok(!api_key.trim().is_empty())
 }
 
+#[tauri::command]
+fn set_volume(state: tauri::State<'_, Arc<AppState>>, volume: f64) {
+    state.set_volume(volume as f32);
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let mut builder = tauri::Builder::default();
@@ -1636,7 +1645,11 @@ pub fn run() {
 
             tray::setup_tray(app.handle())?;
 
-            // Windows are auto-created by Tauri from tauri.conf.json
+            // Make subtitle window visible on all workspaces (macOS)
+            #[cfg(target_os = "macos")]
+            if let Some(subtitle_win) = app.handle().get_webview_window("subtitle") {
+                let _ = subtitle_win.set_visible_on_all_workspaces(true);
+            }
 
             Ok(())
         })
@@ -1652,7 +1665,8 @@ pub fn run() {
             get_subtitle_events,
             cmd_load_config,
             cmd_save_config,
-            validate_api_key
+            validate_api_key,
+            set_volume
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

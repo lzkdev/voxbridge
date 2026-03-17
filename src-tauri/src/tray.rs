@@ -18,8 +18,11 @@ fn size_to_wh(s: &tauri::Size) -> (f64, f64) {
 }
 
 pub fn setup_tray(app: &AppHandle) -> Result<(), Box<dyn std::error::Error>> {
+    let tray_icon = tauri::image::Image::from_bytes(include_bytes!("../icons/tray-icon.png"))
+        .expect("Failed to load tray icon");
     let _tray = TrayIconBuilder::new()
-        .icon(app.default_window_icon().cloned().unwrap())
+        .icon(tray_icon)
+        .icon_as_template(true)
         .tooltip("Voxbridge")
         .on_tray_icon_event(|tray, event| {
             if let TrayIconEvent::Click {

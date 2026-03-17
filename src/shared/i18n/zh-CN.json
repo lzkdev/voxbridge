@@ -17,6 +17,8 @@
   "panel.noVoiceForLang": "该语言不支持语音",
   "panel.tabTranslation": "翻译",
   "panel.tabSettings": "设置",
+  "panel.tabLog": "日志",
+  "panel.logClear": "清除",
 
   "settings.general": "通用",
   "settings.audioDevices": "音频设备",

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
-use std::sync::atomic::AtomicBool;
+use std::sync::atomic::{AtomicBool, AtomicU32};
 use std::sync::{Arc, Mutex};
 
 #[derive(Clone, Serialize)]
@@ -82,9 +82,28 @@ pub struct InnerState {
     pub last_error: Option<String>,
 }
 
-#[derive(Default)]
 pub struct AppState {
     pub inner: Mutex<InnerState>,
+    pub volume: AtomicU32,
+}
+
+impl Default for AppState {
+    fn default() -> Self {
+        let vol = crate::config::load_config().output_volume as f32;
+        Self {
+            inner: Mutex::default(),
+            volume: AtomicU32::new(vol.to_bits()),
+        }
+    }
+}
+
+impl AppState {
+    pub fn get_volume(&self) -> f32 {
+        f32::from_bits(self.volume.load(std::sync::atomic::Ordering::Relaxed))
+    }
+    pub fn set_volume(&self, vol: f32) {
+        self.volume.store(vol.to_bits(), std::sync::atomic::Ordering::Relaxed);
+    }
 }
 
 pub struct InputConvertState {

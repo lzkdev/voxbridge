@@ -17,6 +17,8 @@
   "panel.noVoiceForLang": "No voice available for this language",
   "panel.tabTranslation": "Translation",
   "panel.tabSettings": "Settings",
+  "panel.tabLog": "Log",
+  "panel.logClear": "Clear",
 
   "settings.general": "General",
   "settings.audioDevices": "Audio Devices",

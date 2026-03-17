@@ -30,6 +30,15 @@ Real-time bidirectional speech translation & live subtitles for macOS.
   - Loopback by Rogue Amoeba
 - A [DashScope](https://dashscope.aliyuncs.com/) API Key
 
+### API Pricing
+
+| Model | Billing | Input (Audio) | Input (Image) | Output (Text) | Output (Audio) |
+|-------|---------|---------------|---------------|----------------|----------------|
+| `gummy-realtime-v1` | 0.00015 CNY/sec | — | — | — | — |
+| `qwen3-livetranslate-flash-realtime` | Per million tokens | 64 CNY | 8 CNY | 64 CNY | 240 CNY |
+
+> Pricing from [DashScope](https://help.aliyun.com/zh/model-studio/). Voxbridge uses `gummy` for subtitle-only mode (cheaper) and `qwen3` when voice output is enabled.
+
 ### Quick Start
 
 ```bash
@@ -125,6 +134,15 @@ Then open the app normally.
   - Voicemod Virtual Cable
   - Loopback by Rogue Amoeba
 - [DashScope](https://dashscope.aliyuncs.com/) API Key
+
+### API 计费
+
+| 模型 | 计费方式 | 输入（音频） | 输入（图片） | 输出（文本） | 输出（音频） |
+|------|----------|-------------|-------------|-------------|-------------|
+| `gummy-realtime-v1` | 0.00015 元/秒 | — | — | — | — |
+| `qwen3-livetranslate-flash-realtime` | 按百万 Token | 64 元 | 8 元 | 64 元 | 240 元 |
+
+> 价格来源：[DashScope](https://help.aliyun.com/zh/model-studio/)。纯字幕模式使用 `gummy`（更便宜），开启语音输出时使用 `qwen3`。
 
 ### 快速开始
 

@@ -153,7 +153,11 @@ function buildUpstreamCard(): HTMLElement {
 
   upInputSelect = el("select", { class: "device-select" }) as HTMLSelectElement;
   upInputSelect.addEventListener("change", async () => { if (config) { config.upstream_input_device = upInputSelect.value; await ipc.saveConfig(config); } });
-  card.appendChild(buildDeviceRow(t("panel.inputDevice.mic"), upInputSelect));
+  const upInputRow = buildDeviceRow(t("panel.inputDevice.mic"), upInputSelect);
+  const upRefreshBtn = el("button", { type: "button", class: "device-refresh-btn" }, "\u21BB");
+  upRefreshBtn.addEventListener("click", () => void loadDevices());
+  upInputRow.querySelector("label")!.appendChild(upRefreshBtn);
+  card.appendChild(upInputRow);
 
   upOutputSelect = el("select", { class: "device-select" }) as HTMLSelectElement;
   upOutputSelect.addEventListener("change", async () => { if (config) { config.upstream_output_device = upOutputSelect.value; await ipc.saveConfig(config); } });
@@ -206,7 +210,11 @@ function buildDownstreamCard(): HTMLElement {
 
   downInputSelect = el("select", { class: "device-select" }) as HTMLSelectElement;
   downInputSelect.addEventListener("change", async () => { if (config) { config.downstream_input_device = downInputSelect.value; await ipc.saveConfig(config); } });
-  card.appendChild(buildDeviceRow(t("panel.inputDevice.audioBus"), downInputSelect));
+  const downInputRow = buildDeviceRow(t("panel.inputDevice.audioBus"), downInputSelect);
+  const downRefreshBtn = el("button", { type: "button", class: "device-refresh-btn" }, "\u21BB");
+  downRefreshBtn.addEventListener("click", () => void loadDevices());
+  downInputRow.querySelector("label")!.appendChild(downRefreshBtn);
+  card.appendChild(downInputRow);
 
   // voice output section
   const voiceSection = el("div", { class: "voice-section" });
@@ -221,7 +229,19 @@ function buildDownstreamCard(): HTMLElement {
     downVoiceToggle.className = config.downstream_voice_enabled ? "toggle on" : "toggle";
     downVoiceOptions.style.display = config.downstream_voice_enabled ? "block" : "none";
     await ipc.saveConfig(config);
-    await restartDownstreamIfRunning();
+    // Restart downstream if running — voice toggle changes worker mode
+    if (status.downstream_running) {
+      try {
+        await ipc.startDownstream({
+          api_key: config.api_key, input_device: config.downstream_input_device,
+          source_lang: config.downstream_source, target_lang: config.downstream_target,
+          show_source: config.subtitle_bilingual,
+          output_device: config.downstream_voice_enabled ? config.downstream_output_device : null,
+          voice: config.downstream_voice_enabled ? (config.voice || "Cherry") : null,
+          model: null, ws_url: null,
+        });
+      } catch (e) { console.error("restart downstream:", e); }
+    }
   });
   voiceToggleRow.appendChild(downVoiceToggle);
   voiceSection.appendChild(voiceToggleRow);
@@ -230,21 +250,24 @@ function buildDownstreamCard(): HTMLElement {
   downVoiceOptions.style.display = cfg.downstream_voice_enabled ? "block" : "none";
 
   downOutputSelect = el("select", { class: "device-select" }) as HTMLSelectElement;
-  downOutputSelect.addEventListener("change", async () => { if (config) { config.downstream_output_device = downOutputSelect.value; await ipc.saveConfig(config); await restartDownstreamIfRunning(); } });
+  downOutputSelect.addEventListener("change", async () => { if (config) { config.downstream_output_device = downOutputSelect.value; await ipc.saveConfig(config); } });
   downVoiceOptions.appendChild(buildDeviceRow(t("panel.outputDevice"), downOutputSelect));
 
   downVoiceSelect = el("select", { class: "device-select" }) as HTMLSelectElement;
   repopulateVoiceSelect(downVoiceSelect, cfg.downstream_target, cfg.voice ?? "Cherry");
-  downVoiceSelect.addEventListener("change", async () => { if (config) { config.voice = downVoiceSelect.value; await ipc.saveConfig(config); await restartDownstreamIfRunning(); } });
+  downVoiceSelect.addEventListener("change", async () => { if (config) { config.voice = downVoiceSelect.value; await ipc.saveConfig(config); } });
   downVoiceOptions.appendChild(buildDeviceRow(t("panel.voice"), downVoiceSelect));
 
   const volRow = el("div", { class: "device-row" });
   volRow.appendChild(el("label", {}, t("panel.volume")));
-  const volSlider = el("input", { type: "range", min: "0", max: "200", step: "5", class: "device-select vol-slider" }) as HTMLInputElement;
+  const volSlider = el("input", { type: "range", min: "0", max: "500", step: "5", class: "device-select vol-slider" }) as HTMLInputElement;
   volSlider.value = String(Math.round((cfg.output_volume ?? 1) * 100));
   const volValue = el("span", { class: "vol-value" }, volSlider.value + "%");
-  volSlider.addEventListener("input", () => { volValue.textContent = volSlider.value + "%"; });
-  volSlider.addEventListener("change", async () => { if (config) { config.output_volume = parseInt(volSlider.value) / 100; await ipc.saveConfig(config); await restartDownstreamIfRunning(); } });
+  volSlider.addEventListener("input", () => {
+    volValue.textContent = volSlider.value + "%";
+    void ipc.setVolume(parseInt(volSlider.value) / 100);
+  });
+  volSlider.addEventListener("change", async () => { if (config) { config.output_volume = parseInt(volSlider.value) / 100; await ipc.saveConfig(config); } });
   const volInner = el("div", { class: "vol-inner" });
   volInner.appendChild(volSlider);
   volInner.appendChild(volValue);
@@ -364,8 +387,10 @@ function buildPanel(): void {
   const tabBar = el("div", { class: "tab-bar" });
   const tabTranslate = el("button", { class: "tab-btn active", type: "button" }, t("panel.tabTranslation"));
   const tabSettings = el("button", { class: "tab-btn", type: "button" }, t("panel.tabSettings"));
+  const tabLog = el("button", { class: "tab-btn", type: "button" }, t("panel.tabLog"));
   tabBar.appendChild(tabTranslate);
   tabBar.appendChild(tabSettings);
+  tabBar.appendChild(tabLog);
   panel.appendChild(tabBar);
 
   // Tab content: Translation
@@ -375,11 +400,6 @@ function buildPanel(): void {
   downstreamCard = buildDownstreamCard();
   translateContent.appendChild(downstreamCard);
 
-  const refreshRow = el("div", { class: "refresh-row" });
-  const refreshBtn = el("button", { type: "button", class: "refresh-btn" }, t("panel.refreshDevices"));
-  refreshBtn.addEventListener("click", () => void loadDevices());
-  refreshRow.appendChild(refreshBtn);
-  translateContent.appendChild(refreshRow);
   panel.appendChild(translateContent);
 
   // Tab content: Settings
@@ -387,19 +407,48 @@ function buildPanel(): void {
   settingsContent.appendChild(buildSettingsTab());
   panel.appendChild(settingsContent);
 
+  // Tab content: Log
+  const logContent = el("div", { class: "tab-content", id: "tab-log" });
+  const logBox = el("div", { class: "log-box" });
+  const logClearBtn = el("button", { type: "button", class: "refresh-btn" }, t("panel.logClear"));
+  logClearBtn.addEventListener("click", () => { logBox.replaceChildren(); });
+  logContent.appendChild(logBox);
+  logContent.appendChild(logClearBtn);
+  panel.appendChild(logContent);
+
+  // Log polling
+  let logEventId = 0;
+  async function pollLog(): Promise<void> {
+    try {
+      const events = await ipc.pollEvents(logEventId);
+      for (const ev of events) {
+        logEventId = Math.max(logEventId, ev.id);
+        const line = el("div", { class: "log-line" });
+        const tag = el("span", { class: "log-tag" }, ev.worker);
+        const kind = el("span", { class: "log-kind" }, ev.kind);
+        const text = el("span", {}, ev.text);
+        line.appendChild(tag);
+        line.appendChild(kind);
+        line.appendChild(text);
+        logBox.appendChild(line);
+        logBox.scrollTop = logBox.scrollHeight;
+      }
+    } catch (_) {}
+  }
+  setInterval(() => void pollLog(), 500);
+
   // Tab switching
-  tabTranslate.addEventListener("click", () => {
-    tabTranslate.className = "tab-btn active";
-    tabSettings.className = "tab-btn";
-    translateContent.className = "tab-content active";
-    settingsContent.className = "tab-content";
-  });
-  tabSettings.addEventListener("click", () => {
-    tabTranslate.className = "tab-btn";
-    tabSettings.className = "tab-btn active";
-    translateContent.className = "tab-content";
-    settingsContent.className = "tab-content active";
-  });
+  const allTabs = [tabTranslate, tabSettings, tabLog];
+  const allContents = [translateContent, settingsContent, logContent];
+  function activateTab(idx: number): void {
+    for (let i = 0; i < allTabs.length; i++) {
+      allTabs[i].className = i === idx ? "tab-btn active" : "tab-btn";
+      allContents[i].className = i === idx ? "tab-content active" : "tab-content";
+    }
+  }
+  tabTranslate.addEventListener("click", () => activateTab(0));
+  tabSettings.addEventListener("click", () => activateTab(1));
+  tabLog.addEventListener("click", () => activateTab(2));
 
   // Footer
   const footer = el("div", { class: "panel-footer" });
@@ -453,21 +502,6 @@ async function handleDownstreamToggle(): Promise<void> {
   }
 }
 
-async function restartDownstreamIfRunning(): Promise<void> {
-  if (!config) return;
-  try { const st = await ipc.readStatus(); if (!st.downstream_running) return; } catch (_) { return; }
-  try {
-    await ipc.startDownstream({
-      api_key: config.api_key, input_device: config.downstream_input_device,
-      source_lang: config.downstream_source, target_lang: config.downstream_target,
-      show_source: config.subtitle_bilingual,
-      output_device: config.downstream_voice_enabled ? config.downstream_output_device : null,
-      voice: config.downstream_voice_enabled ? (config.voice || "Cherry") : null,
-      model: null, ws_url: null,
-    });
-  } catch (e) { console.error("restart downstream:", e); }
-  await refreshStatus();
-}
 
 // ─── device loading ──────────────────────────────────────────────────────────
 
@@ -491,6 +525,19 @@ function updateStatusUi(): void {
   upstreamCard.className = status.upstream_running ? "worker-card active" : "worker-card";
   downstreamToggle.className = status.downstream_running ? "toggle on" : "toggle";
   downstreamCard.className = status.downstream_running ? "worker-card active" : "worker-card";
+
+  // Disable config controls while worker is running
+  upSrcSelect.disabled = status.upstream_running;
+  upTgtSelect.disabled = status.upstream_running;
+  upInputSelect.disabled = status.upstream_running;
+  upOutputSelect.disabled = status.upstream_running;
+  upVoiceSelect.disabled = status.upstream_running;
+
+  downSrcSelect.disabled = status.downstream_running;
+  downTgtSelect.disabled = status.downstream_running;
+  downInputSelect.disabled = status.downstream_running;
+  downOutputSelect.disabled = status.downstream_running;
+  downVoiceSelect.disabled = status.downstream_running;
 }
 
 function updateConfigUi(): void {
