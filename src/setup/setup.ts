@@ -260,7 +260,7 @@ function buildStep3(): { step: HTMLElement; loadDevices: () => Promise<void> } {
 function buildStep4(): HTMLElement {
   const step = el("div", { class: "step", id: "step-4" });
 
-  const icon = el("div", { class: "success-icon" }, "✅");
+  const icon = el("div", { class: "success-icon" });
   step.appendChild(icon);
 
   const heading = el("div", { class: "logo logo--done" }, t("setup.allSet"));

@@ -54,7 +54,7 @@
   "setup.validate": "Validate",
   "setup.validating": "Validating...",
   "setup.apiKeyEmpty": "API Key cannot be empty",
-  "setup.apiKeySuccess": "✓ API Key validated successfully",
+  "setup.apiKeySuccess": "API Key validated successfully",
   "setup.validateFailed": "Validation failed, please retry",
   "setup.next": "Next",
   "setup.skip": "Skip, set up later",

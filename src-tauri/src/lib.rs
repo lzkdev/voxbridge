@@ -1645,6 +1645,14 @@ pub fn run() {
 
             tray::setup_tray(app.handle())?;
 
+            // Show setup wizard on first launch (no config file yet)
+            if !config::config_exists() {
+                if let Some(setup_win) = app.handle().get_webview_window("setup") {
+                    let _ = setup_win.show();
+                    let _ = setup_win.set_focus();
+                }
+            }
+
             // Make subtitle window visible on all workspaces (macOS)
             #[cfg(target_os = "macos")]
             if let Some(subtitle_win) = app.handle().get_webview_window("subtitle") {

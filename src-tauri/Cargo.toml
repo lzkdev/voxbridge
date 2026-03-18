@@ -1,6 +1,6 @@
 [package]
 name = "voxbridge"
-version = "0.1.1"
+version = "0.1.2"
 description = "Real-time speech translation desktop app powered by Tauri and Rust"
 authors = ["lzkdev"]
 license = "MIT"

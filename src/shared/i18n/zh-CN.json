@@ -54,7 +54,7 @@
   "setup.validate": "验证",
   "setup.validating": "验证中...",
   "setup.apiKeyEmpty": "API Key 不能为空",
-  "setup.apiKeySuccess": "✓ API Key 验证成功",
+  "setup.apiKeySuccess": "API Key 验证成功",
   "setup.validateFailed": "验证失败，请重试",
   "setup.next": "下一步",
   "setup.skip": "跳过，稍后设置",

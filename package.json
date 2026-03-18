@@ -1,6 +1,6 @@
 {
   "name": "voxbridge",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Real-time bidirectional speech translation and subtitle tool for desktop",
   "author": "lzkdev",
   "license": "MIT",

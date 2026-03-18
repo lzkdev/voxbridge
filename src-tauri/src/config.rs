@@ -151,6 +151,10 @@ fn config_path() -> Option<std::path::PathBuf> {
     dirs::config_dir().map(|d| d.join("voxbridge").join("config.json"))
 }
 
+pub fn config_exists() -> bool {
+    config_path().map_or(false, |p| p.exists())
+}
+
 pub fn load_config() -> AppConfig {
     let path = match config_path() {
         Some(p) => p,
